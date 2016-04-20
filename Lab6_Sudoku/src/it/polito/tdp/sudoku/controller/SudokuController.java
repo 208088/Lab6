@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.sudoku.model.SudokuGenerator;
+import it.polito.tdp.sudoku.model.SudokuSolver;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 
 public class SudokuController {
@@ -18,6 +20,10 @@ public class SudokuController {
 	
     @FXML
     private ResourceBundle resources;
+    
+    @FXML
+    private ChoiceBox<Integer> combo;
+
 
     @FXML
     private URL location;
@@ -265,24 +271,30 @@ public class SudokuController {
     @FXML
     private Label lbl81;
     
+    SudokuSolver ss= new SudokuSolver();
+    
     List<Label> labelList = new ArrayList<Label>(); 
+    
+    int soluzione[][]= new int[9][9];
     
     @FXML
     void doGenerate(ActionEvent event){
     	// Per generare un nuova nuova griglia di Sudoku
 		SudokuGenerator sg = new SudokuGenerator();
-		int [][] matrix = sg.nextBoard(levelExpert);
-		
+		int [][] matrix = sg.nextBoard(combo.getValue());
+		ss.setMatrice(matrix);
 		printMatrixOnScreen(matrix);
     }
     
     @FXML
     void doSolve(ActionEvent event){
-    	
+    	ss.solve(0);
+    	printMatrixOnScreen(ss.getMatrice());
     }
     
     @FXML
     void initialize() {
+    	 assert combo != null : "fx:id=\"combo\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl10 != null : "fx:id=\"lbl10\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl11 != null : "fx:id=\"lbl11\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl12 != null : "fx:id=\"lbl12\" was not injected: check your FXML file 'Sudoku.fxml'.";
@@ -446,6 +458,10 @@ public class SudokuController {
         labelList.add(lbl79);
         labelList.add(lbl80);
         labelList.add(lbl81);
+        
+        combo.getItems().add(levelEasy);
+        combo.getItems().add(levelAdvanced);
+        combo.getItems().add(levelExpert);
     }
     
     
